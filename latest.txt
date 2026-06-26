@@ -1,1 +1,1 @@
-1.0.0|https://github.com/johndimi123/multizip/releases
+1.0.1|https://github.com/johndimi123/multizip/releases

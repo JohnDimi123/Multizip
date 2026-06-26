@@ -32,7 +32,9 @@ namespace Multizip.Core.Settings
         /// <summary>0 = auto (all logical cores). Surfaced in Settings.</summary>
         public int DefaultThreadCount { get; set; } = 0;
 
-        public bool CheckForUpdatesOnStartup { get; set; } = true;
+        // Off by default: no network contact at startup unless the user opts in
+        // (Settings -> "Check for updates on startup", or Help -> "Check for Updates").
+        public bool CheckForUpdatesOnStartup { get; set; } = false;
         public bool ConfirmBeforeDelete { get; set; } = true;
         public bool VerboseLogging { get; set; } = false;
 

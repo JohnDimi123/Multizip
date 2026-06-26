@@ -8,7 +8,7 @@
 ; ---------------------------------------------------------------------------
 
 #define AppName        "Multizip"
-#define AppVersion     "1.0.0"
+#define AppVersion     "1.0.1"
 #define AppPublisher   "Multizip"
 #define AppExeName     "Multizip.exe"
 #define BuildDir       "..\src\Multizip.App\bin\Release\net48"
