@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <AssemblyName>Multizip</AssemblyName>
+    <RootNamespace>Multizip.App</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Company>Multizip</Company>
+    <Product>Multizip</Product>
+    <Version>1.0.0</Version>
+    <Description>Multizip - the all-in-one archive manager with a classic Windows look.</Description>
+    <Platforms>AnyCPU</Platforms>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <!-- WinForms references are added explicitly below for maximum net48 SDK compatibility. -->
+  </PropertyGroup>
+
+  <!-- System / System.Core / System.Net are implicit for SDK-style .NET Framework.
+       Only the WinForms / GDI+ assemblies need to be referenced explicitly. -->
+  <ItemGroup>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Multizip.Core\Multizip.Core.csproj" />
+  </ItemGroup>
+
+</Project>

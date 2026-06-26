@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <AssemblyName>Multizip.Plugins.Sample</AssemblyName>
+    <RootNamespace>Multizip.Plugins.Sample</RootNamespace>
+    <Description>Reference plugin showing how to add an archive provider to Multizip.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System.IO.Compression" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Plugins compile against the Core contracts only. -->
+    <ProjectReference Include="..\Multizip.Core\Multizip.Core.csproj" />
+  </ItemGroup>
+
+</Project>

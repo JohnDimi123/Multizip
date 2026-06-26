@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <AssemblyName>Multizip.Core</AssemblyName>
+    <RootNamespace>Multizip.Core</RootNamespace>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <Company>Multizip</Company>
+    <Product>Multizip</Product>
+    <Version>1.0.0</Version>
+    <Description>Core archive engine: format detection, providers, hashing, jobs and plugin host.</Description>
+  </PropertyGroup>
+
+  <!--
+    These versions are known-good on NuGet at the time of writing. If a restore
+    fails because a version was yanked, bump to the nearest available build -
+    the wrapper code only uses stable, long-lived API surface. See docs/BUILD.md.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="SharpCompress" Version="0.32.2" />
+    <PackageReference Include="Squid-Box.SevenZipSharp" Version="1.6.1.23" />
+  </ItemGroup>
+
+</Project>
