@@ -13,7 +13,7 @@ using SharpCompress.Writers;
 // NOTE: SharpCompress.Common is intentionally NOT imported wholesale because it
 // also defines an "ExtractionOptions" type that would collide with ours. The few
 // types we need from it are fully qualified below.
-using ReaderOptions = SharpCompress.Common.ReaderOptions;
+using ReaderOptions = SharpCompress.Readers.ReaderOptions;
 using ArchiveType = SharpCompress.Common.ArchiveType;
 using CompressionType = SharpCompress.Common.CompressionType;
 
