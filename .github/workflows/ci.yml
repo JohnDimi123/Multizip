@@ -1,0 +1,60 @@
+name: Build
+
+# Builds Multizip on a Windows runner for every push / PR and uploads the
+# compiled app, portable ZIP and installer as downloadable artifacts (available
+# from the run's "Artifacts" section). Releases are handled by release.yml.
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Build (Release)
+        shell: pwsh
+        run: ./build/build.ps1 -Configuration Release
+
+      - name: Make portable package
+        shell: pwsh
+        run: ./build/make-portable.ps1 -Configuration Release
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: choco install innosetup -y --no-progress
+
+      - name: Build installer
+        shell: pwsh
+        run: |
+          $iscc = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+          & $iscc "build\Multizip.iss"
+
+      - name: Upload application
+        uses: actions/upload-artifact@v4
+        with:
+          name: Multizip-app
+          path: src/Multizip.App/bin/Release/net48/
+
+      - name: Upload portable ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: Multizip-Portable
+          path: dist/Multizip-Portable.zip
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: Multizip-Setup
+          path: build/output/Multizip-Setup.exe

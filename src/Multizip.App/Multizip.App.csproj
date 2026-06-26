@@ -25,6 +25,12 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 
+  <!-- Supplies the .NET Framework 4.8 reference assemblies (incl. WinForms/GDI+)
+       so 'dotnet build' works on a clean SDK-only machine, e.g. the CI runner. -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Multizip.Core\Multizip.Core.csproj" />
   </ItemGroup>

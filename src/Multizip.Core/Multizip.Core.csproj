@@ -20,7 +20,12 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SharpCompress" Version="0.32.2" />
-    <PackageReference Include="Squid-Box.SevenZipSharp" Version="1.6.1.23" />
+    <!-- Floating within 1.6.x: avoids a hard pin on a single patch build while
+         staying on the API surface the wrapper uses. -->
+    <PackageReference Include="Squid-Box.SevenZipSharp" Version="1.6.*" />
+    <!-- Lets the project build with only the .NET SDK installed (no VS / targeting
+         pack required), which is what the CI Windows runner relies on. -->
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

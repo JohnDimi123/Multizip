@@ -1,0 +1,72 @@
+name: Release
+
+# Builds Multizip on Windows and publishes the installer + portable ZIP to a
+# GitHub Release. Trigger it by pushing a version tag (e.g. v1.0.0) or by running
+# the workflow manually from the Actions tab.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release tag to publish (e.g. v1.0.0)'
+        required: false
+        default: 'v1.0.0'
+
+permissions:
+  contents: write   # needed to create the release and upload assets
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Build (Release)
+        shell: pwsh
+        run: ./build/build.ps1 -Configuration Release
+
+      - name: Make portable package
+        shell: pwsh
+        run: ./build/make-portable.ps1 -Configuration Release
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: choco install innosetup -y --no-progress
+
+      - name: Build installer
+        shell: pwsh
+        run: |
+          $iscc = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+          & $iscc "build\Multizip.iss"
+
+      - name: Resolve release tag
+        id: tag
+        shell: bash
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            echo "name=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+            echo "pre=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
+            echo "pre=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.name }}
+          name: Multizip ${{ steps.tag.outputs.name }}
+          prerelease: ${{ steps.tag.outputs.pre }}
+          generate_release_notes: true
+          files: |
+            build/output/Multizip-Setup.exe
+            dist/Multizip-Portable.zip

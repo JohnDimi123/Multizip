@@ -13,6 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Plugins compile against the Core contracts only. -->
     <ProjectReference Include="..\Multizip.Core\Multizip.Core.csproj" />
   </ItemGroup>
