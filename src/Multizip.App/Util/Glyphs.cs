@@ -166,7 +166,8 @@ namespace Multizip.App.Util
             using (var brush = new SolidBrush(Color.FromArgb(235, 235, 235)))
             using (var pen = new Pen(Ink, 2 * u))
             {
-                g.FillPie(brush, rect, 180, 180);
+                // FillPie has no RectangleF overload; pass the float rectangle explicitly.
+                g.FillPie(brush, rect.X, rect.Y, rect.Width, rect.Height, 180, 180);
                 g.DrawArc(pen, rect, 180, 180);
             }
             using (var needle = new Pen(Color.FromArgb(200, 40, 40), 2.4f * u))

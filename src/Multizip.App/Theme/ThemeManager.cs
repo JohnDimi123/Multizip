@@ -69,23 +69,15 @@ namespace Multizip.App.Theme
                         child.BackColor = Color.Transparent;
                         child.ForeColor = Foreground;
                         break;
+                    // Panel covers TableLayoutPanel / FlowLayoutPanel (they derive from it).
                     case Panel _:
-                    case TableLayoutPanel _:
-                    case FlowLayoutPanel _:
                         child.BackColor = Background;
                         child.ForeColor = Foreground;
                         break;
-                    case MenuStrip ms:
-                        ms.BackColor = Background;
-                        ms.ForeColor = Foreground;
-                        break;
+                    // ToolStrip covers MenuStrip and StatusStrip (both derive from it).
                     case ToolStrip ts:
                         ts.BackColor = Background;
                         ts.ForeColor = Foreground;
-                        break;
-                    case StatusStrip ss:
-                        ss.BackColor = Background;
-                        ss.ForeColor = Foreground;
                         break;
                     default:
                         child.ForeColor = Foreground;
