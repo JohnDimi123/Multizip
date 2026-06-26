@@ -73,10 +73,9 @@ Root: HKCR; Subkey: "Directory\shell\Multizip.Add\command"; ValueType: string; V
 ; of archive extensions stays maintainable.
 
 [Code]
+// Comma-separated so we avoid a typed const array (which Pascal Script rejects).
 const
-  ArchiveExts: array[0..17] of string =
-    ('.zip', '.7z', '.rar', '.tar', '.gz', '.tgz', '.bz2', '.xz', '.zst',
-     '.cab', '.arj', '.lzh', '.lha', '.cpio', '.iso', '.wim', '.jar', '.apk');
+  ArchiveExtsCsv = '.zip,.7z,.rar,.tar,.gz,.tgz,.bz2,.xz,.zst,.cab,.arj,.lzh,.lha,.cpio,.iso,.wim,.jar,.apk';
 
 procedure WriteVerb(const Ext, Verb, Caption, Args: string);
 var
@@ -90,30 +89,48 @@ begin
   RegWriteStringValue(HKEY_CLASSES_ROOT, Cmd, '', '"' + Exe + '" ' + Args + ' "%1"');
 end;
 
-procedure RegisterContextMenu;
-var
-  i: Integer;
+procedure RegisterExt(const Ext: string);
 begin
-  for i := 0 to GetArrayLength(ArchiveExts) - 1 do
-  begin
-    WriteVerb(ArchiveExts[i], 'Multizip.Open',        'Open with Multizip',            '/open');
-    WriteVerb(ArchiveExts[i], 'Multizip.ExtractHere', 'Extract here (Multizip)',       '/extracthere');
-    WriteVerb(ArchiveExts[i], 'Multizip.ExtractTo',   'Extract to folder... (Multizip)', '/extractto');
-  end;
+  WriteVerb(Ext, 'Multizip.Open',        'Open with Multizip',              '/open');
+  WriteVerb(Ext, 'Multizip.ExtractHere', 'Extract here (Multizip)',         '/extracthere');
+  WriteVerb(Ext, 'Multizip.ExtractTo',   'Extract to folder... (Multizip)', '/extractto');
+end;
+
+procedure RemoveExt(const Ext: string);
+var
+  Base: string;
+begin
+  Base := 'SystemFileAssociations\' + Ext + '\shell\';
+  RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, Base + 'Multizip.Open');
+  RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, Base + 'Multizip.ExtractHere');
+  RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, Base + 'Multizip.ExtractTo');
+end;
+
+procedure ForEachExt(DoRegister: Boolean);
+var
+  S, Ext: string;
+  P: Integer;
+begin
+  S := ArchiveExtsCsv + ',';
+  repeat
+    P := Pos(',', S);
+    Ext := Copy(S, 1, P - 1);
+    Delete(S, 1, P);
+    if Ext <> '' then
+    begin
+      if DoRegister then RegisterExt(Ext) else RemoveExt(Ext);
+    end;
+  until S = '';
+end;
+
+procedure RegisterContextMenu;
+begin
+  ForEachExt(True);
 end;
 
 procedure RemoveContextMenu;
-var
-  i: Integer;
-  Base: string;
 begin
-  for i := 0 to GetArrayLength(ArchiveExts) - 1 do
-  begin
-    Base := 'SystemFileAssociations\' + ArchiveExts[i] + '\shell\';
-    RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, Base + 'Multizip.Open');
-    RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, Base + 'Multizip.ExtractHere');
-    RegDeleteKeyIncludingSubkeys(HKEY_CLASSES_ROOT, Base + 'Multizip.ExtractTo');
-  end;
+  ForEachExt(False);
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
